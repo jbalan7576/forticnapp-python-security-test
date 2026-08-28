@@ -58,4 +58,12 @@ jobs:
 
       - name: Run FortiCNAPP scan
         run: |
-          lacework sca scan ./
+         lacework sca scan ./ 2>&1 | tee forticnapp-scan-report.txt
+
+      - name: Upload FortiCNAPP scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: forticnapp-scan-report
+            path: forticnapp-scan-report.txt
+            retention-days: 30
