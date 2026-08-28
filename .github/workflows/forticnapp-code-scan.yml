@@ -59,8 +59,7 @@ jobs:
       - name: Run FortiCNAPP scan
         run: |
           lacework sca scan ./ \
-            --formats=sarif,lw-json,md-summary,cdx-json
-              --save-results=true
+            --formats=sarif,lw-json,md-summary,cdx-json --save-results=true
 
       - name: List generated reports
         if: always()
