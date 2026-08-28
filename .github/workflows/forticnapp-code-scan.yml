@@ -75,7 +75,7 @@ jobs:
 
       - name: Upload FortiCNAPP scan reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: forticnapp-scan-reports
           path: |
