@@ -1,0 +1,61 @@
+name: FortiCNAPP Code Security
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  LW_ACCOUNT: ${{ secrets.LW_ACCOUNT }}
+  LW_SUBACCOUNT: ${{ secrets.LW_SUBACCOUNT }}
+  LW_API_KEY: ${{ secrets.LW_API_KEY }}
+  LW_API_SECRET: ${{ secrets.LW_API_SECRET }}
+
+jobs:
+  security-scan:
+    name: FortiCNAPP Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install FortiCNAPP CLI
+        run: |
+          curl https://raw.githubusercontent.com/lacework/go-sdk/main/cli/install.sh | bash
+
+      - name: Verify CLI
+        run: |
+          lacework version
+
+      - name: Configure FortiCNAPP CLI
+        run: |
+          lacework configure \
+            -a "${LW_ACCOUNT}.lacework.net" \
+            -k "${LW_API_KEY}" \
+            -s "${LW_API_SECRET}" \
+            --noninteractive
+
+      - name: Install SCA component
+        run: |
+          lacework component install sca
+
+      - name: Verify SCA component
+        run: |
+          lacework sca version
+
+      - name: Run FortiCNAPP scan
+        run: |
+          lacework sca scan ./
