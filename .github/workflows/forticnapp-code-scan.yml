@@ -61,16 +61,13 @@ jobs:
           lacework sca scan ./ \
             --formats=md-summary --save-results=true
 
-      - name: List generated reports
+      - name: Find FortiCNAPP reports
         if: always()
         run: |
-          echo "========================================"
-          echo "FortiCNAPP generated files"
-          echo "========================================"
-          find . -type f \( \
-            -name "*.sarif" -o \
-            -name "*.json" -o \
-            -name "*.md" \
+          echo "FortiCNAPP report files:"
+          find /tmp -type f \( \
+            -name "sca.*" -o \
+            -name "billing.json" \
           \) -print
 
       - name: Upload FortiCNAPP scan reports
@@ -78,8 +75,5 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: forticnapp-scan-reports
-          path: |
-            **/*.sarif
-            **/*.json
-            **/*.md
+          path: /tmp/**/sca.*
           retention-days: 30
