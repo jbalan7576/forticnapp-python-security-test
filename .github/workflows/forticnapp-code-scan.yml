@@ -56,7 +56,7 @@ jobs:
         run: |
           lacework sca version
 
-            - name: Run FortiCNAPP scan
+      - name: Run FortiCNAPP scan
         run: |
           lacework sca scan ./ \
             --formats=md-summary \
