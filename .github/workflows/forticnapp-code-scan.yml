@@ -56,11 +56,12 @@ jobs:
         run: |
           lacework sca version
 
-      - name: Run FortiCNAPP scan
+            - name: Run FortiCNAPP scan
         run: |
           lacework sca scan ./ \
-            --formats=md-summary --save-results=true
-            
+            --formats=md-summary \
+            --save-results=true
+
       - name: Locate FortiCNAPP reports
         if: always()
         run: |
@@ -74,15 +75,14 @@ jobs:
             echo "FortiCNAPP report directory not found"
           fi
 
-       - name: Upload FortiCNAPP scan reports
-        if: always() && env.REPORT_DIR != ''
+      - name: Upload FortiCNAPP scan reports
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: forticnapp-scan-reports
           path: |
-            ${{ env.REPORT_DIR }}/sca.sarif
-            ${{ env.REPORT_DIR }}/sca.lw.json
-            ${{ env.REPORT_DIR }}/sca.cdx.json
-            ${{ env.REPORT_DIR }}/sca.spdx.json
+            /tmp/sca*/sca.sarif
+            /tmp/sca*/sca.lw.json
+            /tmp/sca*/sca.cdx.json
+            /tmp/sca*/sca.spdx.json
           retention-days: 30
-     
